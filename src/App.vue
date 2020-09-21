@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="overflow-hidden">
     <header class="h-56 flex flex-col items-center">
       <h1 class="pt-6 text-2xl font-medium text-white tracking-wider">
         IP Address Tracker
@@ -23,7 +23,7 @@
     </header>
 
     <section
-      class="-mt-20 w-3/4 md:flex py-2 md:p-6 mx-auto bg-white rounded-lg shadow-lg"
+      class="absolute inset-x-0 -mt-20 w-3/4 md:flex py-2 md:p-6 mx-auto bg-white rounded-lg z-10 shadow-lg"
     >
       <Card class="md:w-1/4 border-r-2" title="IP Address" :body="ipAddress" />
 
@@ -41,16 +41,20 @@
 
       <Card class="md:w-1/4" title="ISP" :body="data.isp" />
     </section>
+
+    <LeafletMapSection :location="lat_long" />
   </div>
 </template>
 
 <script>
 import Card from '@/components/Card.vue';
+import LeafletMapSection from '@/components/LeafletMapSection.vue';
 
 export default {
   name: 'App',
   components: {
-    Card
+    Card,
+    LeafletMapSection
   },
   data() {
     return {
@@ -60,7 +64,9 @@ export default {
         location: {
           region: 'Brooklyn',
           country: 'NY',
-          postalCode: '10001'
+          postalCode: '10001',
+          lat: '22.9983794',
+          long: '72.5458539'
         },
         timezone: '-05:00',
         isp: 'SpaceX Star'
@@ -77,6 +83,10 @@ export default {
     },
     timezone() {
       return `UTC ${this.data.timezone}`;
+    },
+    lat_long() {
+      let location = this.data.location;
+      return [location.lat, location.long];
     }
   }
 };
