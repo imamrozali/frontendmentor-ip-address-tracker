@@ -21,16 +21,63 @@
         </button>
       </div>
     </header>
+
+    <section
+      class="-mt-20 w-3/4 md:flex py-2 md:p-6 mx-auto bg-white rounded-lg shadow-lg"
+    >
+      <Card class="md:w-1/4 border-r-2" title="IP Address" :body="ipAddress" />
+
+      <Card
+        class="md:w-1/4 border-r-2 rounded"
+        title="Location"
+        :body="location"
+      />
+
+      <Card
+        class="md:w-1/4 border-r-2 rounded"
+        title="Timezone"
+        :body="timezone"
+      />
+
+      <Card class="md:w-1/4" title="ISP" :body="data.isp" />
+    </section>
   </div>
 </template>
 
 <script>
+import Card from '@/components/Card.vue';
+
 export default {
   name: 'App',
+  components: {
+    Card
+  },
   data() {
     return {
-      search: ''
+      search: '',
+      data: {
+        ipAddress: '192.212.174.101',
+        location: {
+          region: 'Brooklyn',
+          country: 'NY',
+          postalCode: '10001'
+        },
+        timezone: '-05:00',
+        isp: 'SpaceX Star'
+      }
     };
+  },
+  computed: {
+    ipAddress() {
+      return this.data.ipAddress;
+    },
+    location() {
+      let location = this.data.location;
+      return `${location.region}, ${location.country} ${location.postalCode}`;
+    },
+    timezone() {
+      return `UTC ${this.data.timezone}`;
+    }
   }
 };
 </script>
