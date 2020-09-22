@@ -14,6 +14,7 @@
         />
         <button
           class="inline-block w-10 flex items-center justify-center bg-gray-900 hover:opacity-75 focus:outline-none focus:shadow-outline border-0 rounded-tr-md rounded-br-md"
+          @click="getLocation"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="11" height="14">
             <path fill="none" stroke="#FFF" stroke-width="3" d="M2 1l6 6-6 6" />
@@ -58,35 +59,37 @@ export default {
   },
   data() {
     return {
-      search: '',
-      data: {
-        ipAddress: '192.212.174.101',
-        location: {
-          region: 'Brooklyn',
-          country: 'NY',
-          postalCode: '10001',
-          lat: '22.9983794',
-          long: '72.5458539'
-        },
-        timezone: '-05:00',
-        isp: 'SpaceX Star'
-      }
+      search: '192.212.174.101',
+      data: {}
     };
   },
   computed: {
     ipAddress() {
-      return this.data.ipAddress;
+      return this.data.ip;
     },
     location() {
       let location = this.data.location;
       return `${location.region}, ${location.country} ${location.postalCode}`;
     },
     timezone() {
-      return `UTC ${this.data.timezone}`;
+      return `UTC ${this.data.location.timezone}`;
     },
     lat_long() {
       let location = this.data.location;
-      return [location.lat, location.long];
+      return [location.lat, location.lng];
+    }
+  },
+  created() {
+    this.$nextTick(() => {
+      this.getLocation();
+    });
+  },
+  methods: {
+    getLocation() {
+      let url = `https://geo.ipify.org/api/v1?apiKey=${process.env.VUE_APP_IPIFY_KEY}&ipAddress=${this.search}&domain=${this.search}`;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => (this.data = data));
     }
   }
 };
